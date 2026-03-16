@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hex Myth Duel</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Local Browser Board Game</p>
+          <h1>Hex Myth Duel</h1>
+          <p class="subtitle">
+            六角盤で戦うローカル2人対戦。手番ごとに
+            <strong>召喚</strong>・<strong>移動</strong>・<strong>攻撃</strong>
+            を選ぶ。
+          </p>
+        </div>
+        <button id="restart-button" class="ghost-button" type="button">
+          リスタート
+        </button>
+      </header>
+
+      <main class="layout">
+        <section class="board-panel">
+          <div class="board-frame">
+            <svg id="board" aria-label="ゲーム盤" role="img"></svg>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel status-panel">
+            <p id="turn-indicator" class="turn-indicator"></p>
+            <p id="mode-indicator" class="mode-indicator"></p>
+            <p id="selection-indicator" class="selection-indicator"></p>
+            <p id="message" class="message"></p>
+          </section>
+
+          <section class="panel">
+            <h2>行動</h2>
+            <div class="action-grid">
+              <button data-mode="move" class="mode-button" type="button">
+                移動 / 攻撃
+              </button>
+              <button data-mode="summon" class="mode-button" type="button">
+                召喚
+              </button>
+            </div>
+            <p class="hint">
+              移動先が空きならそのまま移動。敵駒がいて攻撃力が上なら、そのまま撃破して進入する。
+            </p>
+          </section>
+
+          <section class="panel">
+            <h2>召喚在庫</h2>
+            <div id="summon-controls" class="summon-grid"></div>
+            <p class="hint">
+              召喚は自分のエルフに隣接する空きマスのみ。エルフは召喚できない。
+            </p>
+          </section>
+
+          <section class="panel">
+            <h2>駒性能</h2>
+            <div id="piece-reference" class="reference-list"></div>
+          </section>
+
+          <section class="panel">
+            <h2>対局ログ</h2>
+            <ol id="log" class="log-list"></ol>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

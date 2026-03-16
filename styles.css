@@ -1,0 +1,357 @@
+:root {
+  --bg: #f2ebdc;
+  --bg-accent: #ead8b3;
+  --panel: rgba(255, 250, 241, 0.88);
+  --panel-border: rgba(71, 52, 32, 0.18);
+  --ink: #342312;
+  --muted: #765c45;
+  --light-piece: #f5ede0;
+  --light-piece-edge: #b18d5f;
+  --dark-piece: #2e2b2c;
+  --dark-piece-edge: #d8c08c;
+  --cell-stroke: #3c332b;
+  --cell-fill: rgba(255, 255, 255, 0.9);
+  --cell-highlight: rgba(237, 205, 112, 0.55);
+  --cell-attack: rgba(210, 105, 85, 0.58);
+  --cell-summon: rgba(124, 170, 117, 0.52);
+  --selected: #c9872d;
+  --shadow: 0 22px 50px rgba(88, 61, 38, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Avenir Next", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(211, 175, 114, 0.28), transparent 24%),
+    linear-gradient(135deg, var(--bg), #f8f4eb 48%, var(--bg-accent));
+}
+
+.shell {
+  width: min(1400px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 24px 0 32px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+  line-height: 0.94;
+}
+
+h2 {
+  margin-bottom: 12px;
+  font-size: 1.15rem;
+}
+
+.subtitle {
+  max-width: 54ch;
+  margin: 12px 0 0;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.78fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.board-panel,
+.panel {
+  backdrop-filter: blur(12px);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+}
+
+.board-panel {
+  padding: 20px;
+}
+
+.board-frame {
+  aspect-ratio: 1 / 1;
+  min-height: 520px;
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.78), rgba(255, 248, 235, 0.7) 50%, rgba(229, 214, 189, 0.72));
+}
+
+#board {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sidebar {
+  display: grid;
+  gap: 18px;
+}
+
+.panel {
+  padding: 18px;
+}
+
+.status-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 250, 241, 0.95), rgba(237, 226, 207, 0.82)),
+    var(--panel);
+}
+
+.turn-indicator {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.mode-indicator,
+.selection-indicator,
+.message,
+.hint {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.message {
+  min-height: 3.2em;
+}
+
+.action-grid,
+.summon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.action-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+button {
+  border: 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.mode-button,
+.summon-button,
+.ghost-button {
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(78, 58, 36, 0.14);
+}
+
+.mode-button.active,
+.summon-button.active {
+  background: #3a2d22;
+  color: #fff8ea;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 246, 228, 0.28),
+    0 12px 22px rgba(58, 45, 34, 0.22);
+}
+
+.ghost-button {
+  padding-inline: 18px;
+}
+
+.summon-button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 84px;
+}
+
+.summon-button .piece-name {
+  font-weight: 700;
+}
+
+.summon-button .piece-count {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.reference-list,
+.log-list {
+  display: grid;
+  gap: 10px;
+}
+
+.reference-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.62);
+  border-radius: 16px;
+}
+
+.reference-badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  border: 2px solid var(--light-piece-edge);
+}
+
+.reference-card strong,
+.reference-card span {
+  display: block;
+}
+
+.reference-card span {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.log-list {
+  margin: 0;
+  padding-left: 22px;
+  color: var(--muted);
+}
+
+.cell-group {
+  cursor: pointer;
+}
+
+.hex-cell {
+  fill: var(--cell-fill);
+  stroke: var(--cell-stroke);
+  stroke-width: 2.4;
+  transition: fill 120ms ease, transform 120ms ease;
+}
+
+.hex-cell.hoverable:hover {
+  fill: rgba(255, 244, 212, 0.96);
+}
+
+.hex-cell.target {
+  fill: var(--cell-highlight);
+}
+
+.hex-cell.attack {
+  fill: var(--cell-attack);
+}
+
+.hex-cell.summon {
+  fill: var(--cell-summon);
+}
+
+.hex-cell.selected {
+  fill: rgba(247, 212, 127, 0.84);
+  stroke: var(--selected);
+  stroke-width: 3.2;
+}
+
+.piece-token {
+  stroke-width: 3;
+}
+
+.piece-token.light {
+  fill: var(--light-piece);
+  stroke: var(--light-piece-edge);
+}
+
+.piece-token.dark {
+  fill: var(--dark-piece);
+  stroke: var(--dark-piece-edge);
+}
+
+.piece-mark {
+  font-size: 18px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.piece-mark.light {
+  fill: #6b4b27;
+}
+
+.piece-mark.dark {
+  fill: #f2e2b7;
+}
+
+.piece-power {
+  font-size: 9px;
+  text-anchor: middle;
+  fill: var(--muted);
+  pointer-events: none;
+}
+
+@media (max-width: 1060px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .board-frame {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100vw - 20px, 100%);
+    padding-top: 18px;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-grid,
+  .summon-grid {
+    grid-template-columns: 1fr;
+  }
+}
