@@ -1,4 +1,4 @@
-const BOARD_RADIUS = 3;
+const BOARD_RADIUS = 4;
 const HEX_SIZE = 42;
 const VIEWBOX_PADDING = 48;
 const DIRECTIONS = [
@@ -22,11 +22,18 @@ const PLAYER_DEFS = {
   dark: { name: "黒陣営", tokenClass: "dark" },
 };
 
-const STARTING_LAYOUT = [
-  { type: "elf", q: 0, r: 3 },
-  { type: "unicorn", q: 1, r: 2 },
-  { type: "siren", q: -1, r: 3 },
-];
+const STARTING_LAYOUT = {
+  light: [
+    { type: "elf", q: 0, r: 2 },
+    { type: "unicorn", q: 2, r: 1 },
+    { type: "siren", q: -2, r: 3 },
+  ],
+  dark: [
+    { type: "elf", q: 0, r: -2 },
+    { type: "unicorn", q: 2, r: -3 },
+    { type: "siren", q: -2, r: -1 },
+  ],
+};
 
 const boardElement = document.querySelector("#board");
 const turnIndicator = document.querySelector("#turn-indicator");
@@ -53,9 +60,10 @@ function createInitialState() {
   idCounter = 1;
 
   const pieces = [];
-  for (const piece of STARTING_LAYOUT) {
-    pieces.push(createPiece(piece.type, "light", piece.q, piece.r));
-    pieces.push(createPiece(piece.type, "dark", -piece.q, -piece.r));
+  for (const [player, setup] of Object.entries(STARTING_LAYOUT)) {
+    for (const piece of setup) {
+      pieces.push(createPiece(piece.type, player, piece.q, piece.r));
+    }
   }
 
   return {
@@ -445,15 +453,15 @@ function generateBoard(radius) {
 
 function axialToPixel(q, r) {
   return {
-    x: HEX_SIZE * Math.sqrt(3) * (q + r / 2),
-    y: HEX_SIZE * 1.5 * r,
+    x: HEX_SIZE * 1.5 * q,
+    y: HEX_SIZE * Math.sqrt(3) * (r + q / 2),
   };
 }
 
 function hexPoints(centerX, centerY, size) {
   const points = [];
   for (let index = 0; index < 6; index += 1) {
-    const angle = ((60 * index) - 30) * (Math.PI / 180);
+    const angle = (60 * index) * (Math.PI / 180);
     const x = centerX + size * Math.cos(angle);
     const y = centerY + size * Math.sin(angle);
     points.push(`${x.toFixed(2)},${y.toFixed(2)}`);
@@ -467,7 +475,7 @@ function computeViewBox(cells) {
 
   for (const cell of cells) {
     for (let index = 0; index < 6; index += 1) {
-      const angle = ((60 * index) - 30) * (Math.PI / 180);
+      const angle = (60 * index) * (Math.PI / 180);
       xs.push(cell.x + HEX_SIZE * Math.cos(angle));
       ys.push(cell.y + HEX_SIZE * Math.sin(angle));
     }
